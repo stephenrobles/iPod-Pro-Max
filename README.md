@@ -58,3 +58,7 @@ The app is signed with Developer ID and notarized, then distributed as a DMG fro
 3. `xcrun notarytool submit iPodProMax.dmg --keychain-profile <profile> --wait` and `xcrun stapler staple`.
 
 Only an Apple Development certificate is installed on this Mac today, so local builds run but a Developer ID certificate is needed before the DMG can be distributed.
+
+## License
+
+MIT — see [LICENSE](LICENSE). iPod is a trademark of Apple Inc.; this project is not affiliated with or endorsed by Apple. The database formats were implemented from public documentation and cross-checked against libgpod (LGPL), which is used only as a development-time test oracle and is not part of the app.
