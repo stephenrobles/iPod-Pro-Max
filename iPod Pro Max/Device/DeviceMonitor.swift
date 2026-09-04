@@ -65,7 +65,8 @@ final class DeviceMonitor {
     nonisolated static func scanVolumes(simulatedFolders: [URL]) -> [IPodDevice] {
         var found: [IPodDevice] = []
         let keys: [URLResourceKey] = [.volumeNameKey, .volumeIsRemovableKey, .volumeIsEjectableKey, .volumeIsInternalKey, .volumeIsLocalKey, .volumeIsRootFileSystemKey]
-        let volumes = FileManager.default.mountedVolumeURLs(includingResourceValuesForKeys: keys, options: [.skipHiddenVolumes]) ?? []
+        // Development aid: `-ignoreDevices YES` hides real iPods.
+        let volumes = UserDefaults.standard.bool(forKey: "ignoreDevices") ? [] : (FileManager.default.mountedVolumeURLs(includingResourceValuesForKeys: keys, options: [.skipHiddenVolumes]) ?? [])
         for v in volumes {
             guard let values = try? v.resourceValues(forKeys: Set(keys)) else { continue }
             // iPods are local, ejectable USB/FireWire disks. Skip network shares, the boot disk and internal drives.

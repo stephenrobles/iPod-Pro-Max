@@ -7,8 +7,10 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct VideosView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
     @State private var selection = Set<UUID>()
     @State private var sortOrder = [KeyPathComparator(\LibraryTrack.title)]
     @State private var search = ""
@@ -80,7 +82,7 @@ struct VideosView: View {
             .width(40)
             TableColumn("Title", value: \.title) { t in
                 HStack(spacing: 8) {
-                    ArtworkThumb(key: t.artworkKey, size: 28, cornerRadius: 3, placeholder: "film")
+                    ArtworkThumb(url: library.artworkURL(t.artworkKey), size: 28, cornerRadius: 3, placeholder: "film")
                     Text(t.title).lineLimit(1)
                     if !t.fileExists { Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange).help("File not found") }
                 }

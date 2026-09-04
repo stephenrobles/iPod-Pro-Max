@@ -12,14 +12,14 @@ struct iPod_Pro_MaxApp: App {
     @State private var library: LibraryStore
     @State private var devices: DeviceMonitor
     @State private var sync: SyncCoordinator
-    @State private var appState = AppState()
+    @State private var appState: AppState
 
     init() {
-        let l = LibraryStore()
-        let d = DeviceMonitor()
-        _library = State(initialValue: l)
-        _devices = State(initialValue: d)
-        _sync = State(initialValue: SyncCoordinator(library: l, devices: d))
+        let services = AppServices.shared
+        _library = State(initialValue: services.library)
+        _devices = State(initialValue: services.devices)
+        _sync = State(initialValue: services.sync)
+        _appState = State(initialValue: services.appState)
     }
 
     var body: some Scene {
@@ -64,6 +64,25 @@ struct iPod_Pro_MaxApp: App {
                 .environment(sync)
                 .environment(appState)
         }
+    }
+}
+
+/// The app's long-lived model objects. Views normally get these from the SwiftUI environment; this singleton is the
+/// fallback for views that AppKit hosts outside the main view tree (table cells, toolbar items, sheets), where an
+/// `@Environment` lookup would otherwise crash.
+@MainActor
+final class AppServices {
+    static let shared = AppServices()
+    let library: LibraryStore
+    let devices: DeviceMonitor
+    let sync: SyncCoordinator
+    let appState: AppState
+
+    private init() {
+        library = LibraryStore()
+        devices = DeviceMonitor()
+        sync = SyncCoordinator(library: library, devices: devices)
+        appState = AppState()
     }
 }
 

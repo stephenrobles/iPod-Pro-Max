@@ -7,10 +7,14 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(DeviceMonitor.self) private var devices
-    @Environment(SyncCoordinator.self) private var sync
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(DeviceMonitor.self) private var envDevices: DeviceMonitor?
+    private var devices: DeviceMonitor { envDevices ?? AppServices.shared.devices }
+    @Environment(SyncCoordinator.self) private var envSync: SyncCoordinator?
+    private var sync: SyncCoordinator { envSync ?? AppServices.shared.sync }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
 
     var body: some View {
         @Bindable var appState = appState
@@ -35,6 +39,13 @@ struct ContentView: View {
         .modifier(MenuRequestHandler(currentDevice: currentDevice))
         .onAppear {
             if appState.selection == nil, let d = devices.devices.first { appState.selection = .device(d.id) }
+            // Development aid: `-importFolder /path` imports a folder shortly after launch.
+            if let folder = UserDefaults.standard.string(forKey: "importFolder"), !folder.isEmpty {
+                Task {
+                    try? await Task.sleep(for: .seconds(2))
+                    await library.importFiles([URL(fileURLWithPath: folder)])
+                }
+            }
         }
         .onChange(of: devices.devices) { old, new in
             handleDeviceChange(old: old, new: new)
@@ -96,10 +107,14 @@ struct ContentView: View {
 /// Turns menu-bar requests (flags on AppState) into actions.
 struct MenuRequestHandler: ViewModifier {
     let currentDevice: IPodDevice?
-    @Environment(LibraryStore.self) private var library
-    @Environment(DeviceMonitor.self) private var devices
-    @Environment(SyncCoordinator.self) private var sync
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(DeviceMonitor.self) private var envDevices: DeviceMonitor?
+    private var devices: DeviceMonitor { envDevices ?? AppServices.shared.devices }
+    @Environment(SyncCoordinator.self) private var envSync: SyncCoordinator?
+    private var sync: SyncCoordinator { envSync ?? AppServices.shared.sync }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
 
     func body(content: Content) -> some View {
         content
@@ -150,10 +165,14 @@ struct MenuRequestHandler: ViewModifier {
 }
 
 struct SidebarView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(DeviceMonitor.self) private var devices
-    @Environment(SyncCoordinator.self) private var sync
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(DeviceMonitor.self) private var envDevices: DeviceMonitor?
+    private var devices: DeviceMonitor { envDevices ?? AppServices.shared.devices }
+    @Environment(SyncCoordinator.self) private var envSync: SyncCoordinator?
+    private var sync: SyncCoordinator { envSync ?? AppServices.shared.sync }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
 
     var body: some View {
         @Bindable var appState = appState
@@ -215,8 +234,10 @@ struct SidebarView: View {
 }
 
 struct WelcomeView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
 
     var body: some View {
         VStack(spacing: 18) {
@@ -256,14 +277,16 @@ enum FileImportActions {
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = true
         panel.allowedContentTypes = [.audio, .movie, .video, .folder, .mp3, .mpeg4Audio, .wav, .aiff, .mpeg4Movie, .quickTimeMovie, .appleProtectedMPEG4Video]
-        guard panel.runModal() == .OK else { return }
+        guard await panel.begin() == .OK else { return }
         await library.importFiles(panel.urls)
     }
 }
 
 struct NewPlaylistSheet: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
     @Environment(\.dismiss) private var dismiss
     @State private var name = "New Playlist"
     var initialTrackIDs: [UUID] = []

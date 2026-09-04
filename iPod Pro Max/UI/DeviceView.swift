@@ -7,10 +7,14 @@ import SwiftUI
 
 struct DeviceView: View {
     let device: IPodDevice
-    @Environment(LibraryStore.self) private var library
-    @Environment(DeviceMonitor.self) private var devices
-    @Environment(SyncCoordinator.self) private var sync
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(DeviceMonitor.self) private var envDevices: DeviceMonitor?
+    private var devices: DeviceMonitor { envDevices ?? AppServices.shared.devices }
+    @Environment(SyncCoordinator.self) private var envSync: SyncCoordinator?
+    private var sync: SyncCoordinator { envSync ?? AppServices.shared.sync }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
 
     @State private var contents: DeviceContents?
     @State private var isRenaming = false

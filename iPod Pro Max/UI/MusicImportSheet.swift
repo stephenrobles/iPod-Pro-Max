@@ -9,8 +9,10 @@
 import SwiftUI
 
 struct MusicImportSheet: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
     @Environment(\.dismiss) private var dismiss
 
     @State private var catalog: MusicAppCatalog?

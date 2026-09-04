@@ -7,7 +7,8 @@ import SwiftUI
 import Photos
 
 struct PhotosView: View {
-    @Environment(LibraryStore.self) private var library
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
     @State private var status = PhotosAccess.authorizationStatus
     @State private var albums: [PhotosAlbumInfo] = []
     @State private var allCount = 0

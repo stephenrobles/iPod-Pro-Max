@@ -43,13 +43,13 @@ extension LibraryTrack {
     }
 }
 
-/// Small artwork thumbnail loaded off the main thread and cached.
+/// Small artwork thumbnail loaded off the main thread. Takes the file URL directly so it never depends on
+/// environment objects — table cells on macOS can be hosted outside the main view tree.
 struct ArtworkThumb: View {
-    let key: String?
+    let url: URL?
     var size: CGFloat = 40
     var cornerRadius: CGFloat = 4
     var placeholder: String = "music.note"
-    @Environment(LibraryStore.self) private var library
     @State private var image: NSImage?
 
     var body: some View {
@@ -69,9 +69,8 @@ struct ArtworkThumb: View {
             }
         }
         .frame(width: size, height: size)
-        .task(id: key) {
-            guard let key else { image = nil; return }
-            let url = library.artworkURL(for: key)
+        .task(id: url) {
+            guard let url else { image = nil; return }
             let target = size * 2
             let loaded: NSImage? = await Task.detached(priority: .utility) {
                 guard let cg = ImageLoading.cgImage(from: url) else { return nil }
@@ -85,7 +84,7 @@ struct ArtworkThumb: View {
                 guard let out = ctx.makeImage() else { return nil }
                 return NSImage(cgImage: out, size: NSSize(width: w, height: h))
             }.value
-            image = loaded
+            if !Task.isCancelled { image = loaded }
         }
     }
 }

@@ -7,8 +7,10 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct MusicView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
     @State private var selection = Set<UUID>()
     @State private var sortOrder = [KeyPathComparator(\LibraryTrack.title)]
     @State private var search = ""
@@ -99,7 +101,7 @@ struct MusicView: View {
             .width(40)
             TableColumn("Title", value: \.title) { t in
                 HStack(spacing: 8) {
-                    ArtworkThumb(key: t.artworkKey, size: 22, cornerRadius: 3)
+                    ArtworkThumb(url: library.artworkURL(t.artworkKey), size: 22, cornerRadius: 3)
                     Text(t.title).lineLimit(1)
                     if !t.fileExists {
                         Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange).help("File not found")

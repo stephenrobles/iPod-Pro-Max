@@ -7,7 +7,8 @@ import SwiftUI
 
 struct PlaylistView: View {
     let playlistID: UUID
-    @Environment(LibraryStore.self) private var library
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
     @State private var selection = Set<UUID>()
     @State private var showAddSongs = false
     @State private var isRenaming = false
@@ -29,7 +30,7 @@ struct PlaylistView: View {
                     List(selection: $selection) {
                         ForEach(tracks) { t in
                             HStack(spacing: 10) {
-                                ArtworkThumb(key: t.artworkKey, size: 30, cornerRadius: 3)
+                                ArtworkThumb(url: library.artworkURL(t.artworkKey), size: 30, cornerRadius: 3)
                                 VStack(alignment: .leading, spacing: 1) {
                                     Text(t.title).lineLimit(1)
                                     Text("\(t.displayArtist) — \(t.displayAlbum)").font(.caption).foregroundStyle(.secondary).lineLimit(1)
@@ -107,7 +108,8 @@ struct PlaylistView: View {
 
 struct AddSongsSheet: View {
     let playlistID: UUID
-    @Environment(LibraryStore.self) private var library
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
     @Environment(\.dismiss) private var dismiss
     @State private var selection = Set<UUID>()
     @State private var search = ""

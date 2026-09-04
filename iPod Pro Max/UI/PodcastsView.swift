@@ -6,8 +6,10 @@
 import SwiftUI
 
 struct PodcastsView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
     @State private var selectedShowID: UUID?
 
     var body: some View {
@@ -51,7 +53,7 @@ struct PodcastsView: View {
         List(selection: $selectedShowID) {
             ForEach(library.shows) { show in
                 HStack(spacing: 10) {
-                    ArtworkThumb(key: show.artworkKey, size: 40, cornerRadius: 6, placeholder: "antenna.radiowaves.left.and.right")
+                    ArtworkThumb(url: library.artworkURL(show.artworkKey), size: 40, cornerRadius: 6, placeholder: "antenna.radiowaves.left.and.right")
                     VStack(alignment: .leading, spacing: 2) {
                         Text(show.title).lineLimit(1)
                         let downloaded = show.episodes.filter(\.isDownloaded).count
@@ -74,7 +76,8 @@ struct PodcastsView: View {
 
 struct ShowDetailView: View {
     let showID: UUID
-    @Environment(LibraryStore.self) private var library
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
     @State private var confirmUnsubscribe = false
 
     private var show: PodcastShow? { library.show(id: showID) }
@@ -98,7 +101,7 @@ struct ShowDetailView: View {
     private func header(_ show: PodcastShow) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: 14) {
-                ArtworkThumb(key: show.artworkKey, size: 88, cornerRadius: 10, placeholder: "antenna.radiowaves.left.and.right")
+                ArtworkThumb(url: library.artworkURL(show.artworkKey), size: 88, cornerRadius: 10, placeholder: "antenna.radiowaves.left.and.right")
                 VStack(alignment: .leading, spacing: 4) {
                     Text(show.title).font(.title2.bold()).lineLimit(2)
                     if let a = show.author { Text(a).foregroundStyle(.secondary) }
@@ -146,7 +149,8 @@ struct EpisodeRow: View {
     let show: PodcastShow
     let episode: PodcastEpisode
     let willSync: Bool
-    @Environment(LibraryStore.self) private var library
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
     @State private var expanded = false
 
     var body: some View {
@@ -222,7 +226,8 @@ struct EpisodeRow: View {
 }
 
 struct AddPodcastSheet: View {
-    @Environment(LibraryStore.self) private var library
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
     @Environment(\.dismiss) private var dismiss
     @State private var query = ""
     @State private var results: [PodcastSearchResult] = []

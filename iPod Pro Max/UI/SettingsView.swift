@@ -6,9 +6,12 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(LibraryStore.self) private var library
-    @Environment(DeviceMonitor.self) private var devices
-    @Environment(AppState.self) private var appState
+    @Environment(LibraryStore.self) private var envLibrary: LibraryStore?
+    private var library: LibraryStore { envLibrary ?? AppServices.shared.library }
+    @Environment(DeviceMonitor.self) private var envDevices: DeviceMonitor?
+    private var devices: DeviceMonitor { envDevices ?? AppServices.shared.devices }
+    @Environment(AppState.self) private var envAppState: AppState?
+    private var appState: AppState { envAppState ?? AppServices.shared.appState }
     @AppStorage("ejectAfterSync") private var ejectAfterSync = false
     @AppStorage("syncArtwork") private var syncArtwork = true
     @AppStorage("defaultKeepLatest") private var defaultKeepLatest = 5

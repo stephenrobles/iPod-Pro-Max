@@ -102,6 +102,11 @@ final class LibraryStore {
         artworkDir.appendingPathComponent("\(key).jpg")
     }
 
+    /// Optional variant for views that may have no artwork.
+    func artworkURL(_ key: String?) -> URL? {
+        key.map { artworkURL(for: $0) }
+    }
+
     /// Stores artwork (re-encoded as JPEG, max 600px) and returns its key. Thread-safe file work is done inline.
     nonisolated static func storeArtwork(_ data: Data, in artworkDir: URL) -> String? {
         guard let image = ImageLoading.cgImage(from: data) else { return nil }
@@ -165,9 +170,12 @@ final class LibraryStore {
 
         var added = 0
         let artworkDir = self.artworkDir
+        // Development aid: `-importDelay 2` sleeps between files to mimic slow cloud storage.
+        let importDelay = UserDefaults.standard.double(forKey: "importDelay")
         for (i, url) in toImport.enumerated() {
             importStatus = "Importing \(url.lastPathComponent)"
             importProgress = Double(i) / Double(toImport.count)
+            if importDelay > 0 { try? await Task.sleep(for: .seconds(importDelay)) }
             let result: (LibraryTrack, String?)? = await Task.detached(priority: .userInitiated) {
                 let attrs = try? url.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey])
                 if VideoTranscoder.isVideoFile(url) {
