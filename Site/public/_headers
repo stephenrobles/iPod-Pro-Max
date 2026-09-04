@@ -1,0 +1,5 @@
+/downloads/*
+  Cache-Control: public, max-age=3600
+  Content-Disposition: attachment
+/img/*
+  Cache-Control: public, max-age=86400

@@ -1,0 +1,15 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+.DS_Store
+# Local tooling output
+Tools/dbtest/build/
+
+dist/
+build/
+Site/node_modules/
+Site/.wrangler/
+Site/public/downloads/*.dmg
