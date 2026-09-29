@@ -78,7 +78,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2660;
-				LastUpgradeCheck = 2660;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					84847AF9304A13F200303053 = {
 						CreatedOnToolsVersion = 26.6;
@@ -159,6 +159,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = J9228F689B;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -184,6 +185,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -223,6 +225,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = J9228F689B;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -241,6 +244,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -254,16 +258,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 3;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = J9228F689B;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "iPod Pro Max asks the Music app to download songs you selected so they can be synced to your iPod.";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "iPod Pro Max reads your Music library so you can pick songs and playlists to sync to your iPod.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Stephen Robles";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "iPod Pro Max reads the albums you choose so it can copy those photos to your iPod.";
-				INFOPLIST_KEY_NSAppleEventsUsageDescription = "iPod Pro Max asks the Music app to download songs you selected so they can be synced to your iPod.";
 				INFOPLIST_KEY_NSSupportsAutomaticTermination = NO;
 				INFOPLIST_KEY_NSSupportsSuddenTermination = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -292,16 +297,17 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 3;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = J9228F689B;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "iPod Pro Max asks the Music app to download songs you selected so they can be synced to your iPod.";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "iPod Pro Max reads your Music library so you can pick songs and playlists to sync to your iPod.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Stephen Robles";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "iPod Pro Max reads the albums you choose so it can copy those photos to your iPod.";
-				INFOPLIST_KEY_NSAppleEventsUsageDescription = "iPod Pro Max asks the Music app to download songs you selected so they can be synced to your iPod.";
 				INFOPLIST_KEY_NSSupportsAutomaticTermination = NO;
 				INFOPLIST_KEY_NSSupportsSuddenTermination = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
