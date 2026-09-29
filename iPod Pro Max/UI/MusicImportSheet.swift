@@ -73,15 +73,16 @@ struct MusicImportSheet: View {
             }
             if let c = catalog {
                 let counts = c.counts
-                HStack(spacing: 14) {
+                FlowLayout(hSpacing: 14, vSpacing: 6) {
                     statChip("\(counts[.ready, default: 0] + counts[.video, default: 0]) ready", color: .green)
                     statChip("\(counts[.appleMusic, default: 0] + counts[.protected, default: 0]) Apple Music / protected", color: .orange)
                     statChip("\(counts[.notDownloaded, default: 0]) not downloaded", color: .gray)
                     if counts[.missingFile, default: 0] > 0 { statChip("\(counts[.missingFile, default: 0]) missing files", color: .red) }
-                    Spacer()
-                    Picker("", selection: $filter) { ForEach(Filter.allCases) { Text($0.rawValue).tag($0) } }
-                        .pickerStyle(.segmented).frame(width: 380)
                 }
+                Picker("Show", selection: $filter) { ForEach(Filter.allCases) { Text($0.rawValue).tag($0) } }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .fixedSize()
                 Text("Songs from an Apple Music subscription are copy-protected and no iPod can play them. Songs you bought from the iTunes Store, ripped from CDs, or added as files sync fine. Songs that live only in iCloud show as “Not downloaded”: select them and click Download in Music, and they become ready once Music has fetched them.")
                     .font(.callout).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
                 if let downloadNote {
@@ -99,6 +100,7 @@ struct MusicImportSheet: View {
             Text(text)
         }
         .font(.callout)
+        .fixedSize()
     }
 
     @ViewBuilder

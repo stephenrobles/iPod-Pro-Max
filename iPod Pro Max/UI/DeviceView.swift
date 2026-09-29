@@ -159,15 +159,14 @@ struct DeviceView: View {
             }
             .frame(height: 18)
             .clipShape(RoundedRectangle(cornerRadius: 6))
-            HStack(spacing: 18) {
+            FlowLayout(hSpacing: 18, vSpacing: 6) {
                 legend(.blue, "Music", Format.bytes(music), detail: contents.map { "\($0.songs) songs" })
                 legend(.purple, "Podcasts", Format.bytes(podcasts), detail: contents.map { "\($0.podcasts) episodes" })
                 if videos > 0 { legend(.orange, "Videos", Format.bytes(videos), detail: contents.map { "\($0.videos)" }) }
                 if photos > 0 { legend(.green, "Photos", Format.bytes(photos), detail: contents.map { "\($0.photos)" }) }
                 legend(.gray, "Other", Format.bytes(other))
                 legend(Color.secondary.opacity(0.3), "Free", Format.bytes(stats.free))
-                Spacer()
-                if stats.total > 0 { Text("\(Format.bytes(stats.total)) total").foregroundStyle(.secondary) }
+                if stats.total > 0 { Text("\(Format.bytes(stats.total)) total").foregroundStyle(.secondary).fixedSize() }
             }
             .font(.caption)
             if let e = contents?.readError {
@@ -183,6 +182,7 @@ struct DeviceView: View {
             Text(value)
             if let detail { Text("(\(detail))").foregroundStyle(.secondary) }
         }
+        .fixedSize()
     }
 
     private var syncPanel: some View {

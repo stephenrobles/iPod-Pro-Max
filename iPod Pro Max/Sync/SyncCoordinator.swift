@@ -80,7 +80,7 @@ final class SyncCoordinator {
                                       photoSelection: library.photoSelection,
                                       options: options)
             let deviceID = device.id
-            let engine = SyncEngine(request: request) { progress in
+            let engine = SyncEngine(request: request) { [weak self] progress in
                 Task { @MainActor [weak self] in
                     self?.update(deviceID) {
                         $0.phase = progress.phase
@@ -139,8 +139,8 @@ final class SyncCoordinator {
         update(device.id) { $0.isRunning = true; $0.phase = "Importing"; $0.detail = "Copying songs from the iPod…"; $0.fraction = 0 }
         defer { update(device.id) { $0.isRunning = false } }
         let deviceID = device.id
-        let files = try await Task.detached(priority: .userInitiated) {
-            try IPodImporter.importAll(from: device, to: destination) { done, total in
+        let files = try await Task.detached(priority: .userInitiated) { [weak self] in
+            try IPodImporter.importAll(from: device, to: destination) { [weak self] done, total in
                 Task { @MainActor [weak self] in
                     self?.update(deviceID) { $0.fraction = total > 0 ? Double(done) / Double(total) : nil; $0.detail = "\(done) of \(total)" }
                 }
