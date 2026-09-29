@@ -1,3 +1,7 @@
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
 /downloads/*
   Cache-Control: public, max-age=3600
   Content-Disposition: attachment
